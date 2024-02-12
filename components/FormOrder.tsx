@@ -31,7 +31,6 @@ const FormOder = ({ listCurrency }) => {
 
     useEffect(() => {
       setReload(!reload)
-      console.log(data)
     }, [data])
 
     const changeCurrency = (currency: object) => {

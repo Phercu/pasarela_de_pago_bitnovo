@@ -52,11 +52,11 @@ const Order = () => {
         const minutosFormateados = minutos.toString().padStart(2, '0');
         const segundosFormateados = segundosRestantes.toString().padStart(2, '0');
         setTime([Number(minutosFormateados), Number(segundosFormateados)])
-    }    
+    }
 
     const expire_time = (expire, type) => {
-        const date = moment()
-        const dateExp = moment(expire)
+        const date = new Date()
+        const dateExp = moment(new Date(expire))
         return dateExp.diff(date, type)
     }
 
@@ -96,6 +96,36 @@ const Order = () => {
         setCurrency(moned)
     }
 
+    const connectWalletMetamask = () => {
+        if(window.ethereum && window.ethereum.isMetaMask) {
+            let w = ''
+            window.ethereum.request({method: 'eth_requestAccounts'}).then((wallet) => {
+                w = wallet
+            })
+            const transactionParameters = { 
+                from: w, 
+                to: '0xcA6841b4ff679a62bDfb1090A0dDbA1a6Ef74545', 
+                value: 0.0000537 
+            };
+            window.ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [transactionParameters],                    
+            })            
+        }
+    }
+
+    useEffect(() => {
+        let socket = new WebSocket(`wss://payments.pre-bnvo.com/ws/${params.order}`);
+        socket.onclose = () => {
+            get_order_identifier().then(() => {
+                setPayExpired(true)
+            })
+            return () => {
+                socket.close();
+            }
+        };
+    }, [payExpired]);
+
     useEffect(() => {
         get_order_identifier()
     },[])
@@ -103,9 +133,10 @@ const Order = () => {
     useEffect(() => {
         if(!loading){
             if(seconds != 0 || minutes != 0){
-                const timerId = setInterval(() => tick(), 1000);
+                const timerId = setInterval(() => tick(), 900);
                 return () => clearInterval(timerId);
             } else {
+                setPayExpired(true)
                 return
             }
         }
@@ -185,7 +216,7 @@ const Order = () => {
                                                         !web3 ?
                                                         <QRCode value={`${!existsQR ? `${CriptoCurrencysQR[dataOrder.currency_id]}:` : ''}${dataOrder?.address}?amount=${dataOrder?.crypto_amount}${dataOrder?.tag_memo ? `&dt=${dataOrder?.tag_memo}` : ''}`} size={160} />
                                                         :
-                                                        <Image className="h-40 w-40 relative bottom-0.5 right-0.5" src={Metamask} alt=""/>
+                                                        <Image onClick={connectWalletMetamask} className="h-40 w-40 cursor-pointer relative bottom-0.5 right-0.5" src={Metamask} alt=""/>
                                                     }
                                                 </div>
                                                 <div className="flex my-5 justify-center">
