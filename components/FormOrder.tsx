@@ -47,11 +47,11 @@ const FormOder = ({ listCurrency }) => {
       }
     }
 
-    const filterCurrencyValid = (e) => {
+    const filterCurrencyValid = () => {
       const newListCurrency = listCurrency.filter((c: { min_amount: number; }) => dataForm.importe > c.min_amount)
     }
 
-    const create_payment = async (e) => {
+    const create_payment = async (e: { preventDefault: () => void; }) => {
       setLoading(true)
       e.preventDefault()
 
