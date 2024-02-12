@@ -97,7 +97,7 @@ const Order = () => {
     }
 
     const connectWalletMetamask = async () => {
-        if(window.ethereum && window.ethereum.isMetaMask) {
+        /*if(window.ethereum && window.ethereum.isMetaMask) {
             let w = ''
             const wallet = await window.ethereum.request({method: 'eth_requestAccounts'}).then((wallet) => {
                 return wallet[0]
@@ -118,7 +118,7 @@ const Order = () => {
             }).catch((err) => {
                 console.log(err)
             })
-        }
+        }*/
     }
 
     useEffect(() => {
