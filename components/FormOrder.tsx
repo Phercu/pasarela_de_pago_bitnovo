@@ -2,9 +2,10 @@
 
 import Image from 'next/image'
 import Info from "../public/img/info-circle.svg";
-import { useState, useEffect } from "react"
+import { useState, useEffect, Component } from "react"
 import ModalList from './ModalList';
 import { useRouter } from 'next/navigation'
+import PropTypes from 'prop-types';
 
 const FormOder = ({ listCurrency }) => {
     const router = useRouter()
@@ -38,7 +39,7 @@ const FormOder = ({ listCurrency }) => {
       setShow(false)
     }
 
-    const inputsForm = (e) => {
+    const inputsForm = (e: { target: { name: string; value: any; }; }) => {
       setdataForm({...dataForm, [e.target.name]: e.target.value})
       if(e.target.name === 'importe'){
         const newListCurrency = listCurrency.filter((c) => Number(e.target.value) >= c.min_amount && Number(e.target.value) <= c.max_amount)
@@ -47,7 +48,7 @@ const FormOder = ({ listCurrency }) => {
     }
 
     const filterCurrencyValid = (e) => {
-      const newListCurrency = listCurrency.filter((c) => dataForm.importe > c.min_amount)
+      const newListCurrency = listCurrency.filter((c: { min_amount: number; }) => dataForm.importe > c.min_amount)
     }
 
     const create_payment = async (e) => {
@@ -175,5 +176,9 @@ const FormOder = ({ listCurrency }) => {
         </>
     )
 }
+
+FormOder.propTypes = {
+  listCurrency: PropTypes.array
+};
 
 export default FormOder

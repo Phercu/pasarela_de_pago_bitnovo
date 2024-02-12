@@ -44,7 +44,7 @@ const Order = () => {
         }
     };
 
-    const millisecondsToSecondsAndMinutes = (milisegundos) => {
+    const millisecondsToSecondsAndMinutes = (milisegundos: number) => {
         const segundos = Math.floor(milisegundos / 1000);
         const minutos = Math.floor(segundos / 60);
         const segundosRestantes = segundos % 60;
@@ -54,7 +54,7 @@ const Order = () => {
         setTime([Number(minutosFormateados), Number(segundosFormateados)])
     }
 
-    const expire_time = (expire, type) => {
+    const expire_time = (expire: string | number | Date, type: string | undefined) => {
         const date = new Date()
         const dateExp = moment(new Date(expire))
         return dateExp.diff(date, type)
@@ -88,29 +88,36 @@ const Order = () => {
         setLoading(false)
     }
 
-    const get_list_currrency = async (currency) => {
+    const get_list_currrency = async (currency: any) => {
         const heaader = {"X-Device-Id": "e9a05b02-3429-4cf8-8846-4d24129744f7"}
         const res = await fetch("https://payments.pre-bnvo.com/api/v1/currencies/", {headers: heaader}) //Recordar colocar en .env
         const data = await res.json()
-        let moned = data.find((element) => element.symbol === currency)
+        let moned = data.find((element: { symbol: any; }) => element.symbol === currency)
         setCurrency(moned)
     }
 
-    const connectWalletMetamask = () => {
+    const connectWalletMetamask = async () => {
         if(window.ethereum && window.ethereum.isMetaMask) {
             let w = ''
-            window.ethereum.request({method: 'eth_requestAccounts'}).then((wallet) => {
-                w = wallet
+            const wallet = await window.ethereum.request({method: 'eth_requestAccounts'}).then((wallet) => {
+                return wallet[0]
+            }).catch((err) => {
+                return err
             })
             const transactionParameters = { 
-                from: w, 
-                to: '0xcA6841b4ff679a62bDfb1090A0dDbA1a6Ef74545', 
-                value: 0.0000537 
+                from: wallet, 
+                to: dataOrder?.address, 
+                value: dataOrder?.crypto_amount
             };
+            console.log(transactionParameters)
             window.ethereum.request({
                 method: 'eth_sendTransaction',
-                params: [transactionParameters],                    
-            })            
+                params: [transactionParameters],
+            }).then((res) => {
+                console.log(res)
+            }).catch((err) => {
+                console.log(err)
+            })
         }
     }
 
