@@ -54,7 +54,7 @@ const Order = () => {
         setTime([Number(minutosFormateados), Number(segundosFormateados)])
     }
 
-    const expire_time = (expire: string | number | Date, type: string | undefined) => {
+    const expire_time = (expire: string | number | Date, type: any) => {
         const date = new Date()
         const dateExp = moment(new Date(expire))
         return dateExp.diff(date, type)
@@ -80,7 +80,7 @@ const Order = () => {
         if(data[0].status === 'EX' || data[0].status === 'OC' || data[0].status === 'CO' || data[0].status === 'AC'){
             setPayExpired(true)
         } else {
-            millisecondsToSecondsAndMinutes(expire_time(data[0].expired_time,'miliseconds'))
+            millisecondsToSecondsAndMinutes(expire_time(data[0].expired_time, "miliseconds"))
         }
 
         setDataOrder(data[0])
