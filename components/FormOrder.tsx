@@ -34,7 +34,6 @@ const FormOrder: React.FC<FormOrderProps> = ({ listCurrency }) => {
     min_amount: 0,
     max_amount: 0,
     image: "",
-    blockchain: ""
   })
 
   useEffect(() => {
