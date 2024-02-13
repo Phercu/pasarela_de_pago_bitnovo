@@ -1,12 +1,11 @@
 import FormOder from '@/components/FormOrder';
 
 const get_list_currrency = async () => {
-  const heaader = {"X-Device-Id": "e9a05b02-3429-4cf8-8846-4d24129744f7"}
-  const res = await fetch("https://payments.pre-bnvo.com/api/v1/currencies/", {headers: heaader}) //Recordar colocar en .env
+  const heaader = {"X-Device-Id": `${process.env.NEXT_PUBLIC_X_DEVICE_ID}`}
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/currencies/`, {headers: heaader}) //Recordar colocar en .env
   const data = await res.json()
   return data
 }
-
 
 export default async function Home() {
 

@@ -1,11 +1,17 @@
+import React from 'react';
 import Image from "next/image"
 import Apro from "@/public/img/tick-circle.svg";
 import Cancel from "@/public/img/close-circle.svg";
 import { useRouter } from 'next/navigation'
 
-const Notification = ({ active }) => {
+
+interface NotificationsProps {
+    active: boolean;
+  }
+
+const Notification: React.FC<NotificationsProps> = ({ active }) => {
     const router = useRouter()
-    
+
     return (
         <>
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-0 lg:px-8">

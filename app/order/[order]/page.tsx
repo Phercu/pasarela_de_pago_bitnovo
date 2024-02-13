@@ -91,8 +91,8 @@ const Order = () => {
     }
 
     const get_order_identifier = async () => {
-        const heaader = {"X-Device-Id": "e9a05b02-3429-4cf8-8846-4d24129744f7"}
-        const res = await fetch(`https://payments.pre-bnvo.com/api/v1/orders/info/${params.order}`, {headers: heaader}) //Recordar colocar en .env
+        const heaader = {"X-Device-Id": `${process.env.NEXT_PUBLIC_X_DEVICE_ID}`}
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/info/${params.order}`, {headers: heaader}) //Recordar colocar en .env
         
         if(res.status === 500){
             setTextLoading('Error: Orden de pago no encontrada')
@@ -118,8 +118,8 @@ const Order = () => {
     }
 
     const get_list_currrency = async (currency: any) => {
-        const heaader = {"X-Device-Id": "e9a05b02-3429-4cf8-8846-4d24129744f7"}
-        const res = await fetch("https://payments.pre-bnvo.com/api/v1/currencies/", {headers: heaader}) //Recordar colocar en .env
+        const heaader = {"X-Device-Id": `${process.env.NEXT_PUBLIC_X_DEVICE_ID}`}
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/currencies/`, {headers: heaader}) //Recordar colocar en .env
         const data = await res.json()
         let moned = data.find((element: { symbol: any; }) => element.symbol === currency)
         setCurrency(moned)
@@ -257,7 +257,7 @@ const Order = () => {
                                                 </div>
                                                 <div className="flex my-5 justify-center">
                                                     <span className="text-[#002859]">Enviar <span className="font-semibold">{dataOrder?.crypto_amount} {dataOrder?.currency_id}</span> </span>
-                                                    <CopyText text={dataOrder?.crypto_amount} style={'left-2'}/>
+                                                    <CopyText text={String(dataOrder?.crypto_amount)} style={'left-2'}/>
                                                 </div>
                                                 <div className="flex my-5 justify-center break-words">
                                                     <span className="text-[#002859] w-2/3">{dataOrder?.address}</span> 
