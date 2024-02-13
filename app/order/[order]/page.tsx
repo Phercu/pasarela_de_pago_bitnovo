@@ -151,7 +151,7 @@ const Order = () => {
     }
 
     useEffect(() => {
-        let socket = new WebSocket(`wss://payments.pre-bnvo.com/ws/${params.order}`);
+        let socket = new WebSocket(`${process.env.NEXT_PUBLIC_WEBSOCKET}/${params.order}`);
         socket.onclose = () => {
             get_order_identifier().then(() => {
                 setPayExpired(true)

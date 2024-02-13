@@ -84,8 +84,6 @@ const FormOrder: React.FC<FormOrderProps> = ({ listCurrency }) => {
       .then(data => {
         router.push(`/order/${data.identifier}`)
       }) //Recordar colocar en .env
-
-    setLoading(false)
   }
 
   return (
