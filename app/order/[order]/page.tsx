@@ -18,13 +18,13 @@ const Order = () => {
         XRP_TEST = 'ripple',
         BTC_TEST = "bitcoin",
         ETH_TEST = "ethereum",
+        ETH_TEST3 = "ethereum",
         BCH_TEST = "bchtest",
         USDC_TEST3 = "ethereum"
     };
 
     const params = useParams<{ order: string }>()
     const [web3, setWeb3] = useState(false)
-    const [existsQR, setExistsQr] = useState(false)
     const [loading, setLoading] = useState(true)
     const [textLoading, setTextLoading] = useState('Cargando datos...')
     const [dataOrder, setDataOrder] = useState({
@@ -101,10 +101,9 @@ const Order = () => {
 
         const data = await res.json()
         const currencyQR = data[0].address.split(':')
-
+        
         if(currencyQR.length > 1){
             data[0].address = currencyQR[1]
-            setExistsQr(true)
         }
 
         if(data[0].status === 'EX' || data[0].status === 'OC' || data[0].status === 'CO' || data[0].status === 'AC'){
@@ -251,7 +250,7 @@ const Order = () => {
                                                 <div className="flex my-5 justify-center">
                                                     {
                                                         !web3 ?
-                                                        <QRCode value={`${!existsQR ? `${CriptoCurrencysQR[dataOrder.currency_id]}:` : ''}${dataOrder?.address}?amount=${dataOrder?.crypto_amount}${dataOrder?.tag_memo ? `&dt=${dataOrder?.tag_memo}` : ''}`} size={160} />
+                                                        <QRCode value={`${CriptoCurrencysQR[dataOrder.currency_id as keyof typeof CriptoCurrencysQR]}:${dataOrder?.address}?amount=${dataOrder?.crypto_amount}${dataOrder?.tag_memo ? `&dt=${dataOrder?.tag_memo}` : ''}`} size={160} />
                                                         :
                                                         <Image onClick={connectWalletMetamask} className="h-40 w-40 cursor-pointer relative bottom-0.5 right-0.5" src={Metamask} alt=""/>
                                                     }
