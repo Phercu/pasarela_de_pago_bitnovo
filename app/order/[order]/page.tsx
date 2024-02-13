@@ -12,6 +12,12 @@ import CopyText from "@/components/CopyText";
 
 import Notification from "@/components/Notification";
 
+declare global {
+    interface Window {
+      ethereum?: any;
+    }
+}
+
 const Order = () => {
 
     enum CriptoCurrencysQR {
@@ -23,40 +29,34 @@ const Order = () => {
         USDC_TEST3 = "ethereum"
     };
 
+    interface DataOrder {
+        created_at: string;
+        status: string;
+        fiat_amount: number;
+        crypto_amount: number;
+        currency_id: string;
+        address: string;
+        tag_memo: string;
+        expired_time: string;
+        notes: string;
+        fiat: string;
+      }
+
     const params = useParams<{ order: string }>()
     const [web3, setWeb3] = useState(false)
     const [loading, setLoading] = useState(true)
     const [textLoading, setTextLoading] = useState('Cargando datos...')
-    const [dataOrder, setDataOrder] = useState({
-        "identifier": "",
-        "reference": null,
-        "created_at": "",
-        "edited_at": "",
-        "status": "",
-        "fiat_amount": 0,
-        "crypto_amount": 0,
-        "unconfirmed_amount": 0.0,
-        "confirmed_amount": 0.0,
-        "currency_id": "",
-        "merchant_device_id": 0,
-        "merchant_device": "",
-        "address": "",
-        "tag_memo": "",
-        "url_ko": "",
-        "url_ok": "",
-        "url_standby": null,
-        "expired_time": "",
-        "good_fee": false,
-        "notes": "",
-        "rbf": false,
-        "safe": false,
-        "fiat": "",
-        "language": "",
-        "percentage": 0.0,
-        "received_amount": 0.0,
-        "balance_based": "false",
-        "internal_data": null,
-        "transactions": []
+    const [dataOrder, setDataOrder] = useState<DataOrder>({
+        created_at: "",
+        status: "",
+        fiat_amount: 0,
+        crypto_amount: 0,
+        currency_id: "",
+        address: "",
+        tag_memo: "",
+        expired_time: "",
+        notes: "",
+        fiat: "",
     })
     const [currency, setCurrency] = useState({ image: ''})
     const [payExpired, setPayExpired] = useState(false)
@@ -126,28 +126,14 @@ const Order = () => {
     }
 
     const connectWalletMetamask = async () => {
-        /*if(window.ethereum && window.ethereum.isMetaMask) {
-            let w = ''
-            const wallet = await window.ethereum.request({method: 'eth_requestAccounts'}).then((wallet) => {
-                return wallet[0]
-            }).catch((err) => {
-                return err
-            })
-            const transactionParameters = { 
-                from: wallet, 
-                to: dataOrder?.address, 
-                value: dataOrder?.crypto_amount
-            };
-            console.log(transactionParameters)
-            window.ethereum.request({
-                method: 'eth_sendTransaction',
-                params: [transactionParameters],
-            }).then((res) => {
-                console.log(res)
-            }).catch((err) => {
-                console.log(err)
-            })
-        }*/
+        if (typeof window !== 'undefined' && window.ethereum && window.ethereum.isMetaMask) {
+            try {
+              const wallet = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[];
+              console.log('Billetera del usuario:', wallet[0]);
+            } catch (error) {
+              console.error('Error al solicitar cuentas:', error);
+            }
+        }
     }
 
     useEffect(() => {

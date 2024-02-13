@@ -6,7 +6,6 @@ interface Currency {
   min_amount: number;
   max_amount: number;
   image: string;
-  blockchain: string;
 }
 
 interface ModalListProps {
